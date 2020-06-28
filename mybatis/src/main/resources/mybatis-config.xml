@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+    <properties>
+        <property name="org.apache.ibatis.parsing.PropertyParser.enable-default-value" value="true"/> <!-- 启用默认值特性 -->
+    </properties>
+
+    <!-- 全局参数 -->
+    <settings>
+        <setting name="mapUnderscoreToCamelCase" value="false"/>
+        <!-- 使全局的映射器启用或禁用缓存。 -->
+        <setting name="cacheEnabled" value="false"/>
+        <!--打印查询语句-->
+        <!--<setting name="logImpl" value="SLF4J"/>-->
+        <setting name="logImpl" value="STDOUT_LOGGING"/>
+    </settings>
+    <!-- 类型别名 -->
+    <typeAliases>
+        <package name="com.review.mybatis.entity"/>
+    </typeAliases>
+
+    <plugins>
+        <plugin interceptor="com.review.mybatis.MyPageInterceptor"/>
+        <!--&lt;!&ndash; com.github.pagehelper为PageHelper类所在包名 &ndash;&gt;-->
+        <!--<plugin interceptor="com.github.pagehelper.PageInterceptor">-->
+            <!--&lt;!&ndash; 使用下面的方式配置参数，后面会有所有的参数介绍 &ndash;&gt;-->
+            <!--<property name="supportMethodsArguments" value="true"/>-->
+            <!--<property name="params" value="pageNum=pageNumKey;pageSize=pageSizeKey;"/>-->
+        <!--</plugin>-->
+    </plugins>
+
+    <environments default="">
+        <environment id="">
+            <transactionManager type="JDBC"></transactionManager>
+            <dataSource type="POOLED">
+                <property name="username"
+                          value="${username:root}"/> <!-- 如果属性 'username' 没有被配置，'username' 属性的值将为 'root' -->
+                <property name="password" value="${password}"/>
+                <property name="driver" value="${driver}"/>
+                <property name="url" value="${url}"/>
+            </dataSource>
+        </environment>
+    </environments>
+    <mappers>
+        <mapper resource="mapper/MyTestMapper.xml"/>
+    </mappers>
+
+</configuration>
