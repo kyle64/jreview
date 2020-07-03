@@ -83,4 +83,12 @@ public class UnknownTest {
         System.out.println("str7.intern() == str7:" + (str7.intern() == str7));
 
     }
+
+    @Test
+    public void testStrAppend() {
+        int n=3;
+        System.out.println(String.format("%0" + n + "d", 0).replace("0", "important"));
+
+        System.out.println(String.format("%-10s", "abcd").replace(' ', '0'));
+    }
 }
