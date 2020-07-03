@@ -70,7 +70,7 @@ public class QuickSort {
      *
      *                 令：n = n/(  2^(m-1) )    =  2^m T[1]  + mn                                                  ----------------第m次递归(m次后结束)
      *
-     *                当最后平分的不能再平分时，也就是说把公式一直往下跌倒，到最后得到T[1]时，说明这个公式已经迭代完了（T[1]是常量了）。
+     *                当最后平分的不能再平分时，也就是说把公式一直往下迭代，到最后得到T[1]时，说明这个公式已经迭代完了（T[1]是常量了）。
      *
      *                得到：T[n/ (2^m) ]  =  T[1]    ===>>   n = 2^m   ====>> m = logn；
      *
@@ -168,9 +168,39 @@ public class QuickSort {
         return array[left];
     }
 
+    public static void qsort(int[] array) {
+        qsortHelper(array, 0, array.length-1);
+    }
+
+    public static void qsortHelper(int[] array, int left, int right) {
+        if (left < right) {
+            int p = qsortPartition(array, left, right);
+            qsortHelper(array, left, p-1);
+            qsortHelper(array, p+1, right);
+        }
+    }
+
+    public static int qsortPartition(int[] array, int left, int right) {
+        int pivot = array[left];
+
+        while (left < right) {
+            // 左移right，找到第一个小于pivot的数
+            while (left < right && array[right] >= pivot) right--;
+            array[left] = array[right]; // first time left is pivot
+
+            // 同上，右移right，找到第一个大于pivot的数
+            while (left < right && array[left] <= pivot) left++;
+            array[right] = array[left];
+        }
+        // pivot左边都小于他，右边都大于他
+        array[left] = pivot;
+        return left;
+    }
+
     public static void main(String[] args) {
-        int[] input = {9,7,2,8,3,1,5,4,6};
-        sort(input, 0, input.length-1);
+        int[] input = {9,7,2,8,3,1,5,5,4,6};
+//        sort(input, 0, input.length-1);
+        qsort(input);
 
         for (int i = 0; i < input.length; i++) {
             System.out.println(input[i]);

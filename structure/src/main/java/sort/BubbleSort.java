@@ -13,15 +13,38 @@ public class BubbleSort {
      * @return void
      */
     public static void sort(int[] array) {
+//        for (int i = 0; i < array.length - 1; i++) {
+//            for (int j = 0; j < array.length - 1 - i; j++) {
+//                if (array[j] > array[j+1]) {
+//                    // swap
+//                    int temp = array[j];
+//                    array[j] = array[j+1];
+//                    array[j+1] = temp;
+//                }
+//            }
+//        }
+
+        boolean isChanged;
+        int temp;
+
         for (int i = 0; i < array.length - 1; i++) {
+            // 第i次遍历变动的标志
+            isChanged = false;
             for (int j = 0; j < array.length - 1 - i; j++) {
+                // 大的数放后面
                 if (array[j] > array[j+1]) {
-                    // swap
-                    int temp = array[j];
+                    temp = array[j];
                     array[j] = array[j+1];
                     array[j+1] = temp;
+
+                    isChanged = true;
                 }
             }
+            // 如果没有发生交换，则说明已完成排序
+            if (!isChanged) break;
+
+            // inner-loop每迭代一次就排好一个数
+            // 说明从后往前的第i个数已排序
         }
     }
 
