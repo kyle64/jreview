@@ -1,5 +1,9 @@
 package tree;
 
+import java.util.ArrayDeque;
+import java.util.Queue;
+import java.util.Stack;
+
 /**
  * Created by ziheng on 2019/6/26.
  */
@@ -139,6 +143,25 @@ public class BinarySearchTree {
         return min(node.left);
     }
 
+    // 层序遍历(使用Queue + bfs，这里不能使用stack + dfs)
+    private void levelOrderTraversal(TreeNode node) {
+        if (node == null) return;
+        Queue<TreeNode> queue = new ArrayDeque<>();
+        queue.add(node);
+        while (!queue.isEmpty()) {
+            TreeNode popNode = queue.poll();
+            System.out.println(popNode.getValue());
+
+            if (popNode.left != null) {
+                queue.add(popNode.left);
+            }
+
+            if (popNode.right != null) {
+                queue.add(popNode.right);
+            }
+        }
+    }
+
     public static void main(String[] args) {
         BinarySearchTree binarySearchTree = new BinarySearchTree();
 
@@ -152,9 +175,9 @@ public class BinarySearchTree {
 
         System.out.println(111);
 
-        binarySearchTree.delete(3);
-        binarySearchTree.inOrder();
-
+//        binarySearchTree.delete(3);
+//        binarySearchTree.inOrder();
+        binarySearchTree.levelOrderTraversal(binarySearchTree.root);
     }
 }
 

@@ -55,7 +55,7 @@ public class SelectionSort {
     public static void main(String[] args) {
         int[] input = {9,7,2,8,3,1,5,5,4,6};
         sort(input);
-//        Arrays.sort(new Integer[] {3,5,4});
+//        Arrays.sort(new Integer[] {3,3,5,6,7,4,5,2});
 
         for (int i = 0; i < input.length; i++) {
             System.out.println(input[i]);
