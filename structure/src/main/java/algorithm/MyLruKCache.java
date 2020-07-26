@@ -12,6 +12,7 @@ public class MyLruKCache<K, V> extends MyLruCache<K, V> {
     private int cacheLimit;
 
     public MyLruKCache(int maxSize, int k) {
+        // 最近使用过k次的LRU缓存
         super(maxSize);
         this.cacheLimit = k;
     }

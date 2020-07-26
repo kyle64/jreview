@@ -91,4 +91,9 @@ public class UnknownTest {
 
         System.out.println(String.format("%-10s", "abcd").replace(' ', '0'));
     }
+
+    @Test
+    public void testIntegerOverflow() {
+        System.out.println(Integer.MIN_VALUE % 10);
+    }
 }
