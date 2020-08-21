@@ -120,6 +120,8 @@ public class NioServer implements Runnable {
             // 执行之前position是在buffer缓冲区的末尾，通过flip方法将position复位到buffer的第一个位置
             byteBuffer.flip();
 
+            // Charset charset = Charset.forName("UTF-8");
+            // String receiveStr = new String(charset.decode(byteBuffer).array());
             StringBuilder sb = new StringBuilder();
             while (byteBuffer.hasRemaining()) {
                 sb.append((char) byteBuffer.get());
