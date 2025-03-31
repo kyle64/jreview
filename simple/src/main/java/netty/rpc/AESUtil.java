@@ -8,83 +8,81 @@ import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
-import javax.xml.bind.DatatypeConverter;
+import javax.crypto.spec.IvParameterSpec;
+import java.security.SecureRandom;
+import java.util.HexFormat;
 
-/**
- * AES算法编程实现
- *
- * @author xzb
- */
 public class AESUtil {
 
+    // 生成密钥，并转换为十六进制字符串
     public static String generateKey() throws Exception {
-        return DatatypeConverter.printHexBinary(initKey());
+        return HexFormat.of().formatHex(initKey());
     }
 
-    /**
-     * 生成密钥
-     *
-     * @throws Exception
-     */
+    // 生成密钥
     public static byte[] initKey() throws Exception {
-        //密钥生成器
         KeyGenerator keyGen = KeyGenerator.getInstance("AES");
-        //初始化密钥生成器
-        keyGen.init(128);  //默认128，获得无政策权限后可用192或256
-        //生成密钥
+        keyGen.init(128); // 默认使用128位密钥
         SecretKey secretKey = keyGen.generateKey();
         return secretKey.getEncoded();
     }
 
-    /**
-     * 加密
-     *
-     * @throws Exception
-     */
+    // 加密
     public static byte[] encryptAES(byte[] data, byte[] key) throws Exception {
         //恢复密钥
         SecretKey secretKey = new SecretKeySpec(key, "AES");
-        //Cipher完成加密
-        Cipher cipher = Cipher.getInstance("AES");
-        //根据密钥对cipher进行初始化
-        cipher.init(Cipher.ENCRYPT_MODE, secretKey);
-        //加密
-        byte[] encrypt = cipher.doFinal(data);
+        Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
 
-        return encrypt;
+        // 生成随机IV
+        byte[] iv = new byte[cipher.getBlockSize()];
+        SecureRandom random = new SecureRandom();
+        random.nextBytes(iv);
+        IvParameterSpec ivSpec = new IvParameterSpec(iv);
+
+        cipher.init(Cipher.ENCRYPT_MODE, secretKey, ivSpec);
+        byte[] encryptedData = cipher.doFinal(data);
+
+        // 返回IV和密文，解密时需要使用相同的IV
+        byte[] result = new byte[iv.length + encryptedData.length];
+        System.arraycopy(iv, 0, result, 0, iv.length);
+        System.arraycopy(encryptedData, 0, result, iv.length, encryptedData.length);
+
+        return result;
     }
 
-    /**
-     * 解密
-     */
+    // 解密
     public static byte[] decryptAES(byte[] data, byte[] key) throws Exception {
-        //恢复密钥生成器
         SecretKey secretKey = new SecretKeySpec(key, "AES");
-        //Cipher完成解密
-        Cipher cipher = Cipher.getInstance("AES");
-        //根据密钥对cipher进行初始化
-        cipher.init(Cipher.DECRYPT_MODE, secretKey);
-        byte[] plain = cipher.doFinal(data);
-        return plain;
+        Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+
+        // 提取IV
+        byte[] iv = new byte[cipher.getBlockSize()];
+        System.arraycopy(data, 0, iv, 0, iv.length);
+        IvParameterSpec ivSpec = new IvParameterSpec(iv);
+
+        cipher.init(Cipher.DECRYPT_MODE, secretKey, ivSpec);
+
+        // 提取密文
+        byte[] encryptedData = new byte[data.length - iv.length];
+        System.arraycopy(data, iv.length, encryptedData, 0, encryptedData.length);
+
+        return cipher.doFinal(encryptedData);
     }
 
     public static final String DATA = "hi, welcome to my git area!";
 
     public static void main(String[] args) throws Exception {
-        //获得密钥
-        byte[] aesKey = DatatypeConverter.parseHexBinary("2fe0acc43bd3364779e90442a5f3e092");
+        // 生成或使用已有的AES密钥
+        byte[] aesKey = HexFormat.of().parseHex("2fe0acc43bd3364779e90442a5f3e092");
 
-        //加密
+        // 加密
         byte[] encrypt = AESUtil.encryptAES(DATA.getBytes(), aesKey);
-        String dataString = DatatypeConverter.printHexBinary(encrypt);
-        System.out.println(DATA + " AES 加密 : " + dataString);
+        String encryptedDataString = HexFormat.of().formatHex(encrypt);
+        System.out.println(DATA + " AES 加密 : " + encryptedDataString);
 
-        byte[] recoverBytes = DatatypeConverter.parseHexBinary(dataString);
-        System.out.println(recoverBytes);
-        //解密
+        // 解密
+        byte[] recoverBytes = HexFormat.of().parseHex(encryptedDataString);
         byte[] plain = AESUtil.decryptAES(recoverBytes, aesKey);
         System.out.println(DATA + " AES 解密 : " + new String(plain));
-
     }
 }
-

@@ -2,8 +2,6 @@ package concurrent;
 
 import java.util.concurrent.locks.AbstractQueuedSynchronizer;
 
-import static sun.misc.VM.getState;
-
 /**
  * Created by ziheng on 2020/6/23.
  *
